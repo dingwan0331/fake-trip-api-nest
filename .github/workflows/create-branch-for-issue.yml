@@ -7,7 +7,7 @@ on:
 
 jobs:
   create_branch:
-    if: github.event.issues == true
+    if: github.event.action == 'assigned'
     runs-on: ubuntu-latest
     steps:
       - name: Create Issue Branch
