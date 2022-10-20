@@ -1,4 +1,5 @@
 import { Booking } from 'src/apps/booking/entities/booking.entity';
+import { Review } from 'src/apps/review/entities/review.entity';
 import {
   BaseEntity,
   Column,
@@ -41,6 +42,9 @@ export class Room extends BaseEntity {
 
   @OneToMany(() => Booking, (booking) => booking.room)
   booking: Booking[];
+
+  @OneToMany(() => Review, (review) => review.room)
+  review: Review[];
 
   @ManyToOne(() => Accommodation, (accommodation) => accommodation.room)
   accommodation: Accommodation;
