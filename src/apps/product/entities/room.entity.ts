@@ -1,3 +1,4 @@
+import { Booking } from 'src/apps/booking/entities/booking.entity';
 import {
   BaseEntity,
   Column,
@@ -37,6 +38,9 @@ export class Room extends BaseEntity {
 
   @OneToMany(() => RoomSubImage, (roomSubImage) => roomSubImage.room)
   roomSubImage: RoomSubImage[];
+
+  @OneToMany(() => Booking, (booking) => booking.room)
+  booking: Booking[];
 
   @ManyToOne(() => Accommodation, (accommodation) => accommodation.room)
   accommodation: Accommodation;
