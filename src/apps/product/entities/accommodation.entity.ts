@@ -2,11 +2,14 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { AccommodationAmenity } from './accommodation-amenities.entity';
 import { AccommodationRegion } from './accommodation-region.entity';
 import { AccommodationSubImage } from './accommodation-sub-image.entity';
 import { AccommodationType } from './accommodation-type.entity';
@@ -64,4 +67,8 @@ export class Accommodation extends BaseEntity {
     (accommodationType) => accommodationType.accommodation,
   )
   accommodationType: AccommodationType;
+
+  @ManyToMany(() => AccommodationAmenity)
+  @JoinTable({ name: 'accommadation_and_accommandation_amenity' })
+  accommodationAmenity: AccommodationAmenity[];
 }
