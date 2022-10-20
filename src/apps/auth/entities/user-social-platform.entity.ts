@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User } from './user.entity';
 
 export enum UserPlatformTypeEnum {
   KAKAOTALK = 'kakao_talk',
@@ -15,4 +22,7 @@ export class UserSocialPlatform extends BaseEntity {
 
   @Column('bigint', { unsigned: true })
   pk: number;
+
+  @OneToOne(() => User, (user) => user.userSocialPlatform)
+  user: User;
 }
