@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { BookingStatus } from './booking-status.entity';
 
 @Entity('bookings')
 export class Booking extends BaseEntity {
@@ -38,4 +39,7 @@ export class Booking extends BaseEntity {
 
   @ManyToOne(() => Room, (room) => room.booking)
   room: Room;
+
+  @ManyToOne(() => BookingStatus, (bookingStatus) => bookingStatus.booking)
+  bookingStatus: BookingStatus;
 }
