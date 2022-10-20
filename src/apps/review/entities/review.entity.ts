@@ -1,9 +1,11 @@
+import { Room } from 'src/apps/product/entities/room.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -32,4 +34,7 @@ export class Review extends BaseEntity {
 
   @OneToMany(() => ReviewImage, (reviewImage) => reviewImage.review)
   reviewImage: ReviewImage[];
+
+  @ManyToOne(() => Room, (room) => room.review)
+  room: Room;
 }
