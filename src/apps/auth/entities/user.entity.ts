@@ -4,10 +4,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserSocialPlatform } from './user-social-platform.entity';
 
 @Unique(['nickname', 'phoneNumber'])
 @Entity('users')
@@ -35,4 +38,11 @@ export class User extends BaseEntity {
 
   @DeleteDateColumn({ type: 'timestamp' })
   deletedAt: Date;
+
+  @OneToOne(
+    () => UserSocialPlatform,
+    (userSocialPlatform) => userSocialPlatform.user,
+  )
+  @JoinColumn()
+  userSocialPlatform: UserSocialPlatform;
 }
