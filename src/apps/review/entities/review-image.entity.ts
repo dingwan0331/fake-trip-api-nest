@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Review } from './review.entity';
 
 @Entity('review_images')
 export class ReviewImage extends BaseEntity {
@@ -7,4 +14,7 @@ export class ReviewImage extends BaseEntity {
 
   @Column()
   url: string;
+
+  @ManyToOne(() => Review, (review) => review.reviewImage)
+  review: Review;
 }

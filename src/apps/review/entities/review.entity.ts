@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ReviewImage } from './review-image.entity';
 
 @Entity('reviews')
 export class Review extends BaseEntity {
@@ -27,4 +29,7 @@ export class Review extends BaseEntity {
 
   @DeleteDateColumn({ type: 'timestamp' })
   deletedAt: Date;
+
+  @OneToMany(() => ReviewImage, (reviewImage) => reviewImage.review)
+  reviewImage: ReviewImage[];
 }
