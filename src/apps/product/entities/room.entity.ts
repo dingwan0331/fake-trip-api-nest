@@ -3,9 +3,11 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Accommodation } from './accommodation.entity';
+import { RoomSubImage } from './room-sub-image.entity';
 
 @Entity('rooms')
 export class Room extends BaseEntity {
@@ -32,6 +34,9 @@ export class Room extends BaseEntity {
 
   @Column()
   maxGuest: number;
+
+  @OneToMany(() => RoomSubImage, (roomSubImage) => roomSubImage.room)
+  roomSubImage: RoomSubImage[];
 
   @ManyToOne(() => Accommodation, (accommodation) => accommodation.room)
   accommodation: Accommodation;
