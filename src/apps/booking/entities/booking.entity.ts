@@ -1,9 +1,11 @@
+import { Room } from 'src/apps/product/entities/room.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -33,4 +35,7 @@ export class Booking extends BaseEntity {
 
   @DeleteDateColumn({ type: 'timestamp' })
   deletedAt: Date;
+
+  @ManyToOne(() => Room, (room) => room.booking)
+  room: Room;
 }
