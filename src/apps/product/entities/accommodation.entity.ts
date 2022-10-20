@@ -3,10 +3,12 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 import { AccommodationRegion } from './accommodation-region.entity';
+import { AccommodationSubImage } from './accommodation-sub-image.entity';
 import { AccommodationType } from './accommodation-type.entity';
 
 @Unique(['name'])
@@ -44,6 +46,12 @@ export class Accommodation extends BaseEntity {
 
   @Column('time')
   checkOut: Date;
+
+  @OneToMany(
+    () => AccommodationSubImage,
+    (accommodationSubImage) => accommodationSubImage.accommodation,
+  )
+  accommodationSubImage: AccommodationSubImage[];
 
   @ManyToOne(
     () => AccommodationRegion,
