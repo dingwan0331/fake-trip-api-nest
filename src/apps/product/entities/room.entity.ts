@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Accommodation } from './accommodation.entity';
 
 @Entity('rooms')
 export class Room extends BaseEntity {
@@ -25,4 +32,7 @@ export class Room extends BaseEntity {
 
   @Column()
   maxGuest: number;
+
+  @ManyToOne(() => Accommodation, (accommodation) => accommodation.room)
+  accommodation: Accommodation;
 }

@@ -13,6 +13,7 @@ import { AccommodationAmenity } from './accommodation-amenities.entity';
 import { AccommodationRegion } from './accommodation-region.entity';
 import { AccommodationSubImage } from './accommodation-sub-image.entity';
 import { AccommodationType } from './accommodation-type.entity';
+import { Room } from './room.entity';
 
 @Unique(['name'])
 @Entity('accommodations')
@@ -55,6 +56,9 @@ export class Accommodation extends BaseEntity {
     (accommodationSubImage) => accommodationSubImage.accommodation,
   )
   accommodationSubImage: AccommodationSubImage[];
+
+  @OneToMany(() => Room, (room) => room.accommodation)
+  room: Room[];
 
   @ManyToOne(
     () => AccommodationRegion,
