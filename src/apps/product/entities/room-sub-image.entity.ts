@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Room } from './room.entity';
 
 @Entity('room_sub_images')
 export class RoomSubImage extends BaseEntity {
@@ -7,4 +14,7 @@ export class RoomSubImage extends BaseEntity {
 
   @Column()
   url: string;
+
+  @ManyToOne(() => Room, (room) => room.roomSubImage)
+  room: Room;
 }
