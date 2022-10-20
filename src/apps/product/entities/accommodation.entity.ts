@@ -2,9 +2,11 @@ import {
   BaseEntity,
   Column,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { AccommodationRegion } from './accommodation-region.entity';
 
 @Unique(['name'])
 @Entity('accommodations')
@@ -41,4 +43,10 @@ export class Accommodation extends BaseEntity {
 
   @Column('time')
   checkOut: Date;
+
+  @ManyToOne(
+    () => AccommodationRegion,
+    (accommodationRegion) => accommodationRegion.accommodation,
+  )
+  accommodationRegion: AccommodationRegion;
 }
