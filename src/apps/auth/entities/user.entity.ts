@@ -1,3 +1,4 @@
+import { Booking } from 'src/apps/booking/entities/booking.entity';
 import {
   BaseEntity,
   Column,
@@ -5,6 +6,7 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   Unique,
@@ -45,4 +47,7 @@ export class User extends BaseEntity {
   )
   @JoinColumn()
   userSocialPlatform: UserSocialPlatform;
+
+  @OneToMany(() => Booking, (booking) => booking.user)
+  booking: Booking[];
 }

@@ -1,3 +1,4 @@
+import { User } from 'src/apps/auth/entities/user.entity';
 import { Room } from 'src/apps/product/entities/room.entity';
 import {
   BaseEntity,
@@ -42,4 +43,7 @@ export class Booking extends BaseEntity {
 
   @ManyToOne(() => BookingStatus, (bookingStatus) => bookingStatus.booking)
   bookingStatus: BookingStatus;
+
+  @ManyToOne(() => User, (user) => user.booking)
+  user: User;
 }
