@@ -7,6 +7,7 @@ import {
   Unique,
 } from 'typeorm';
 import { AccommodationRegion } from './accommodation-region.entity';
+import { AccommodationType } from './accommodation-type.entity';
 
 @Unique(['name'])
 @Entity('accommodations')
@@ -49,4 +50,10 @@ export class Accommodation extends BaseEntity {
     (accommodationRegion) => accommodationRegion.accommodation,
   )
   accommodationRegion: AccommodationRegion;
+
+  @ManyToOne(
+    () => AccommodationType,
+    (accommodationType) => accommodationType.accommodation,
+  )
+  accommodationType: AccommodationType;
 }
