@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Booking } from './booking.entity';
 
 export enum BookingStatusEnum {
   예약신청 = '예약 신청',
@@ -17,4 +24,7 @@ export class BookingStatus extends BaseEntity {
 
   @Column('enum', { enum: BookingStatusEnum })
   status: BookingStatusEnum;
+
+  @OneToMany(() => Booking, (booking) => booking.bookingStatus)
+  booking: Booking[];
 }
