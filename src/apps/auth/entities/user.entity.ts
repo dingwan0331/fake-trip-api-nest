@@ -15,17 +15,20 @@ import {
 } from 'typeorm';
 import { UserSocialPlatform } from './user-social-platform.entity';
 
-@Unique(['nickname', 'phoneNumber'])
+@Unique(['nickname', 'phoneNumber', 'email'])
 @Entity('users')
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn({ unsigned: true })
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
   @Column()
   nickname: string;
+
+  @Column()
+  email: string;
 
   @Column({ nullable: true })
   phoneNumber: string;
@@ -45,6 +48,7 @@ export class User extends BaseEntity {
   @OneToOne(
     () => UserSocialPlatform,
     (userSocialPlatform) => userSocialPlatform.user,
+    { eager: true },
   )
   @JoinColumn()
   userSocialPlatform: UserSocialPlatform;
