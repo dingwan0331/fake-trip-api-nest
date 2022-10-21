@@ -4,17 +4,15 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
 import { Accommodation } from './accommodation.entity';
 
-@Unique(['type'])
 @Entity('accommodation_types')
 export class AccommodationType extends BaseEntity {
   @PrimaryGeneratedColumn({ unsigned: true })
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   type: string;
 
   @OneToMany(

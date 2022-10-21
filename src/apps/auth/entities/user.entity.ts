@@ -10,12 +10,10 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserSocialPlatform } from './user-social-platform.entity';
 
-@Unique(['nickname', 'phoneNumber', 'email'])
 @Entity('users')
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn({ unsigned: true })
@@ -24,13 +22,13 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   nickname: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
-  @Column({ nullable: true })
+  @Column({ unique: true, nullable: true })
   phoneNumber: string;
 
   @Column('decimal', { precision: 10, scale: 2, nullable: true })
