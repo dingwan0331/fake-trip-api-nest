@@ -7,7 +7,6 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
 import { AccommodationAmenity } from './accommodation-amenities.entity';
 import { AccommodationRegion } from './accommodation-region.entity';
@@ -15,13 +14,12 @@ import { AccommodationSubImage } from './accommodation-sub-image.entity';
 import { AccommodationType } from './accommodation-type.entity';
 import { Room } from './room.entity';
 
-@Unique(['name'])
 @Entity('accommodations')
 export class Accommodation extends BaseEntity {
   @PrimaryGeneratedColumn({ unsigned: true })
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @Column({ nullable: true })
