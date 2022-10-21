@@ -9,7 +9,13 @@ import { ReviewModule } from './apps/review/review.module';
 import { BookingModule } from './apps/booking/booking.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeORMConfig), AuthModule, ProductModule, ReviewModule, BookingModule],
+  imports: [
+    TypeOrmModule.forRoot(typeORMConfig),
+    AuthModule,
+    ProductModule,
+    ReviewModule,
+    BookingModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
