@@ -12,7 +12,7 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   username: env.MYSQL_USERNAME,
   password: env.MYSQL_PASSWORD,
   database: env.MYSQL_DATABASE,
-  entities: ['dist/**/*.entity.{js,ts}'],
+  entities: [__dirname + '../../**/*.entity.{js,ts}'],
   synchronize: Boolean(env.MYSQL_SYNC),
   namingStrategy: new SnakeNamingStrategy(),
 };
