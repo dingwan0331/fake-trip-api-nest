@@ -18,6 +18,26 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Shutdown Ubuntu MySQL (SUDO)
+        run: sudo service mysql stop
+
+      - name: MySQL setup
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql database: fake_trip_test
+          mysql root password: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo MYSQL_USERNAME=root >> .env
+          echo MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} >> .env
+          echo MYSQL_HOST=127.0.0.1 >> .env
+          echo MYSQL_DATABASE=fake_trip_test >> .env
+          echo MYSQL_SYNC=1 >> .env
+          cat .env
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
