@@ -6,6 +6,7 @@ import { UserPlatformTypeEnum } from './entities/user-social-platform.entity';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './entities/user.entity';
 import { Url } from 'url';
+import { UserSocialPlatform } from './entities/user-social-platform.entity';
 
 interface KakaoSocialResponse {
   id: number;
@@ -66,10 +67,19 @@ export class AuthService {
           },
         } = kakaoUserRes;
 
+        const userSocialPlatformRepository = UserSocialPlatform.getRepository();
+
+        const userSocialPlatform = userSocialPlatformRepository.create({
+          type: UserPlatformTypeEnum.KAKAOTALK,
+          pk,
+        });
+
+        userSocialPlatform.save();
+
         const newUser = this.userRepository.create({
           email,
           nickname,
-          userSocialPlatform: { type: UserPlatformTypeEnum.KAKAOTALK, pk },
+          userSocialPlatform,
         });
 
         userRow = (await this.userRepository.save(newUser)) as User;
