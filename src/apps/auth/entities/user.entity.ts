@@ -46,7 +46,6 @@ export class User extends BaseEntity {
   @OneToOne(
     () => UserSocialPlatform,
     (userSocialPlatform) => userSocialPlatform.user,
-    { eager: true },
   )
   @JoinColumn()
   userSocialPlatform: UserSocialPlatform;
