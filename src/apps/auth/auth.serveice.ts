@@ -6,7 +6,6 @@ import { UserPlatformTypeEnum } from './entities/user-social-platform.entity';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './entities/user.entity';
 import { Url } from 'url';
-import { UserSocialPlatform } from './entities/user-social-platform.entity';
 
 interface KakaoSocialResponse {
   id: number;
@@ -52,41 +51,35 @@ export class AuthService {
         .toPromise()) as AxiosResponse<KakaoSocialResponse>;
 
       const {
-        kakao_account: { email },
+        id: pk,
+        kakao_account: {
+          email,
+          profile: { nickname },
+        },
       } = kakaoUserRes;
 
-      let userRow: undefined | User = await this.userRepository.findOne({
-        email,
+      const { KAKAOTALK: type } = UserPlatformTypeEnum;
+
+      let userRow: undefined | User = await this.userRepository.findUser({
+        pk,
+        type,
       });
 
       if (!userRow) {
-        const {
-          id: pk,
-          kakao_account: {
-            profile: { nickname },
-          },
-        } = kakaoUserRes;
+        const createdSocialPlatform =
+          await this.userRepository.createSocialPlatform({
+            pk,
+            type,
+          });
 
-        const userSocialPlatformRepository = UserSocialPlatform.getRepository();
-
-        const userSocialPlatform = userSocialPlatformRepository.create({
-          type: UserPlatformTypeEnum.KAKAOTALK,
-          pk,
-        });
-
-        userSocialPlatform.save();
-
-        const newUser = this.userRepository.create({
+        userRow = await this.userRepository.createUser({
           email,
           nickname,
-          userSocialPlatform,
+          userSocialPlatform: createdSocialPlatform,
         });
-
-        userRow = (await this.userRepository.save(newUser)) as User;
       }
 
       const { id } = userRow;
-
       const payload = { id };
       const accessToken: string = this.jwtService.sign(payload);
 
