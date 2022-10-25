@@ -85,7 +85,7 @@ export class AuthService {
 
       return { accessToken };
     } catch (err) {
-      if (err.name === 'AxiosError') {
+      if (err.name === 'AxiosError' && err.response.status === 401) {
         throw new UnauthorizedException();
       }
     }
