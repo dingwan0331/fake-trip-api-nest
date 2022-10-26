@@ -10,9 +10,10 @@ import { typeORMConfig } from '../../config/typeOrm.config';
 
 describe('AuthService', () => {
   let authService: AuthService;
+  let app: TestingModule;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    app = await Test.createTestingModule({
       imports: [
         HttpModule,
         JwtModule,
@@ -23,6 +24,10 @@ describe('AuthService', () => {
     }).compile();
 
     authService = app.get<AuthService>(AuthService);
+  });
+
+  afterEach(async () => {
+    await app.close();
   });
 
   describe('signUp', () => {
