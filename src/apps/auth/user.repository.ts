@@ -1,4 +1,9 @@
-import { EntityRepository, Repository } from 'typeorm';
+import {
+  EntityManager,
+  EntityRepository,
+  Repository,
+  TransactionManager,
+} from 'typeorm';
 import { CreateSocialPlatformDto } from './dtos/create-user-social-platform.dto';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { FindUserDto } from './dtos/find-user.dto';
@@ -18,13 +23,17 @@ export class UserRepository extends Repository<User> {
       .getOne();
   }
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(
+    @TransactionManager() transactionManager: EntityManager,
+    createUserDto: CreateUserDto,
+  ): Promise<User> {
     const newUser = this.create(createUserDto);
 
-    return await this.save(newUser);
+    return await transactionManager.save(newUser);
   }
 
   async createSocialPlatform(
+    @TransactionManager() transactionManager: EntityManager,
     socialPlatformDto: CreateSocialPlatformDto,
   ): Promise<UserSocialPlatform> {
     const userSocialPlatformRepository = UserSocialPlatform.getRepository();
@@ -32,6 +41,6 @@ export class UserRepository extends Repository<User> {
     const newUserSocialPlatform =
       userSocialPlatformRepository.create(socialPlatformDto);
 
-    return userSocialPlatformRepository.save(newUserSocialPlatform);
+    return await transactionManager.save(newUserSocialPlatform);
   }
 }
