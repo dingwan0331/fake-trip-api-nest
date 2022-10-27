@@ -37,10 +37,10 @@ export class Accommodation extends BaseEntity {
   @Column()
   thumnail: string;
 
-  @Column('decimal', { precision: 13, scale: 2 })
+  @Column('decimal', { precision: 13, scale: 10 })
   longtitude: number;
 
-  @Column('decimal', { precision: 13, scale: 2 })
+  @Column('decimal', { precision: 13, scale: 10 })
   latitude: number;
 
   @Column('time')
