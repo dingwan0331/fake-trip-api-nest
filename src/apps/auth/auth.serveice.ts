@@ -6,6 +6,7 @@ import { UserPlatformTypeEnum } from './entities/user-social-platform.entity';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './entities/user.entity';
 import { Url } from 'url';
+import { Connection } from 'typeorm';
 
 interface KakaoSocialResponse {
   id: number;
@@ -38,6 +39,7 @@ export class AuthService {
     private readonly httpService: HttpService,
     private readonly jwtService: JwtService,
     private readonly userRepository: UserRepository,
+    private readonly connection: Connection,
   ) {}
   async signup(authorization: string): Promise<{ accessToken: string }> {
     try {
@@ -66,17 +68,30 @@ export class AuthService {
       });
 
       if (!userRow) {
-        const createdSocialPlatform =
-          await this.userRepository.createSocialPlatform({
-            pk,
-            type,
+        const queryRunner = this.connection.createQueryRunner();
+
+        try {
+          await queryRunner.connect();
+          await queryRunner.startTransaction();
+
+          const createdSocialPlatform =
+            await this.userRepository.createSocialPlatform(
+              queryRunner.manager,
+              { pk, type },
+            );
+
+          userRow = await this.userRepository.createUser(queryRunner.manager, {
+            email,
+            nickname,
+            userSocialPlatform: createdSocialPlatform,
           });
 
-        userRow = await this.userRepository.createUser({
-          email,
-          nickname,
-          userSocialPlatform: createdSocialPlatform,
-        });
+          await queryRunner.commitTransaction();
+        } catch (err) {
+          await queryRunner.rollbackTransaction();
+        } finally {
+          await queryRunner.release();
+        }
       }
 
       const { id } = userRow;
