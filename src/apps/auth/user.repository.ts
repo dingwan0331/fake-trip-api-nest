@@ -1,4 +1,4 @@
-import { Connection, EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository } from 'typeorm';
 import { CreateSocialPlatformDto } from './dtos/create-user-social-platform.dto';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { FindUserDto } from './dtos/find-user.dto';
@@ -8,10 +8,14 @@ import { User } from './entities/user.entity';
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   async findUser(findUserDto: FindUserDto): Promise<User> {
-    return await this.findOne({
-      where: { userSocialPlatform: findUserDto },
-      relations: ['userSocialPlatform'],
-    });
+    return await this.createQueryBuilder('user')
+      .select()
+      .leftJoinAndSelect('user.userSocialPlatform', 'userSocialPlatform')
+      .where(
+        'userSocialPlatform.pk =:pk and userSocialPlatform.type = :type',
+        findUserDto,
+      )
+      .getOne();
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
