@@ -1,12 +1,15 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import { HttpService } from '@nestjs/axios';
-import { UserRepository } from './user.repository';
-import { UserPlatformTypeEnum } from './entities/user-social-platform.entity';
+import {
+  UserPlatformTypeEnum,
+  UserSocialPlatform,
+} from './entities/user-social-platform.entity';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './entities/user.entity';
 import { Url } from 'url';
-import { Connection } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 interface KakaoSocialResponse {
   id: number;
@@ -38,8 +41,10 @@ export class AuthService {
   constructor(
     private readonly httpService: HttpService,
     private readonly jwtService: JwtService,
-    private readonly userRepository: UserRepository,
-    private readonly connection: Connection,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(UserSocialPlatform)
+    private readonly socialPlatformRepository: Repository<UserSocialPlatform>,
+    private readonly dataSource: DataSource,
   ) {}
   async signup(authorization: string): Promise<{ accessToken: string }> {
     try {
@@ -62,29 +67,40 @@ export class AuthService {
 
       const { KAKAOTALK: type } = UserPlatformTypeEnum;
 
-      let userRow: undefined | User = await this.userRepository.findUser({
-        pk,
-        type,
-      });
+      // 회원 정보 조회
+      let userRow: undefined | User = await this.userRepository
+        .createQueryBuilder('user')
+        .select()
+        .leftJoinAndSelect('user.userSocialPlatform', 'userSocialPlatform')
+        .where(
+          'userSocialPlatform.pk =:pk and userSocialPlatform.type = :type',
+          {
+            pk,
+            type,
+          },
+        )
+        .getOne();
 
       if (!userRow) {
-        const queryRunner = this.connection.createQueryRunner();
+        const queryRunner = this.dataSource.createQueryRunner();
 
         try {
           await queryRunner.connect();
           await queryRunner.startTransaction();
 
-          const createdSocialPlatform =
-            await this.userRepository.createSocialPlatform(
-              queryRunner.manager,
-              { pk, type },
-            );
+          const createdSocialPlatform = this.socialPlatformRepository.create({
+            pk,
+            type,
+          });
 
-          userRow = await this.userRepository.createUser(queryRunner.manager, {
+          userRow = this.userRepository.create({
             email,
             nickname,
             userSocialPlatform: createdSocialPlatform,
           });
+
+          await queryRunner.manager.save(createdSocialPlatform);
+          await queryRunner.manager.save(userRow);
 
           await queryRunner.commitTransaction();
         } catch (err) {
@@ -103,6 +119,7 @@ export class AuthService {
       if (err.name === 'AxiosError' && err.response.status === 401) {
         throw new UnauthorizedException();
       }
+      console.error(err);
     }
   }
 }
