@@ -4,9 +4,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.serveice';
 import { AxiosResponse } from 'axios';
 import { of } from 'rxjs';
-import { UserRepository } from './user.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from '../../config/typeOrm.config';
+import { User } from './entities/user.entity';
+import { UserSocialPlatform } from './entities/user-social-platform.entity';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -18,7 +19,7 @@ describe('AuthService', () => {
         HttpModule,
         JwtModule,
         TypeOrmModule.forRoot(typeORMConfig),
-        TypeOrmModule.forFeature([UserRepository]),
+        TypeOrmModule.forFeature([User, UserSocialPlatform]),
       ],
       providers: [AuthService],
     }).compile();
