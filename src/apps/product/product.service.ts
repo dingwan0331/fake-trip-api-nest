@@ -1,18 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { AccommodationRepository } from './accommodation.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Accommodation } from './entities/accommodation.entity';
 
 @Injectable()
 export class ProductService {
   constructor(
-    private readonly accommodationRepository: AccommodationRepository,
+    @InjectRepository(Accommodation)
+    private readonly accommodationRepository: Repository<Accommodation>,
   ) {}
   async getAccommodation(id: string) {
-    const accommodationRow =
-      await this.accommodationRepository.getAccommodation(id);
+    const accommodationRow: Accommodation = await this.accommodationRepository
+      .createQueryBuilder('accommodation')
+      .select()
+      .addSelect('room.price')
+      .leftJoinAndSelect('accommodation.accommodationType', 'type')
+      .leftJoinAndSelect('accommodation.accommodationRegion', 'region')
+      .leftJoinAndSelect('accommodation.accommodationSubImage', 'subImage')
+      .leftJoinAndSelect('accommodation.accommodationAmenity', 'amentiy')
+      .leftJoin('accommodation.room', 'room')
+      .orderBy({ price: 'ASC' })
+      .limit(1)
+      .where(id)
+      .getOne();
 
-    const result = Object.assign({ isSoldOut: false }, accommodationRow);
-    result['price'] = result.room[0].price;
-    delete result.room;
-    return result;
+    accommodationRow['price'] = accommodationRow.room[0].price;
+    delete accommodationRow.room;
+    return accommodationRow;
   }
 }
