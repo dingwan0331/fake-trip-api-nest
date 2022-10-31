@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserRepository } from './user.repository';
 import { AuthController } from './auth.controller';
 import { HttpModule } from '@nestjs/axios';
 import { AuthService } from './auth.serveice';
 import { JwtModule } from '@nestjs/jwt';
 import { JWT_EXPIRE_IN, SECRET_KEY } from 'src/config';
+import { User } from './entities/user.entity';
+import { UserSocialPlatform } from './entities/user-social-platform.entity';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { JWT_EXPIRE_IN, SECRET_KEY } from 'src/config';
       secret: SECRET_KEY,
       signOptions: { expiresIn: JWT_EXPIRE_IN },
     }),
-    TypeOrmModule.forFeature([UserRepository]),
+    TypeOrmModule.forFeature([User, UserSocialPlatform]),
   ],
   controllers: [AuthController],
   providers: [AuthService],
