@@ -93,14 +93,17 @@ export class AuthService {
             type,
           });
 
-          userRow = this.userRepository.create({
+          const newSocialPlatform = await queryRunner.manager.save(
+            createdSocialPlatform,
+          );
+
+          const createdUser = this.userRepository.create({
             email,
             nickname,
-            userSocialPlatform: createdSocialPlatform,
+            userSocialPlatform: newSocialPlatform,
           });
 
-          await queryRunner.manager.save(createdSocialPlatform);
-          await queryRunner.manager.save(userRow);
+          userRow = await queryRunner.manager.save(createdUser);
 
           await queryRunner.commitTransaction();
         } catch (err) {
