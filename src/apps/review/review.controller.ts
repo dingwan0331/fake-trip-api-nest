@@ -1,4 +1,4 @@
-import { Controller, Param, Post, Put } from '@nestjs/common';
+import { Controller, HttpCode, Param, Post, Put } from '@nestjs/common';
 
 @Controller('review')
 export class ReviewController {
@@ -9,6 +9,12 @@ export class ReviewController {
 
   @Put('/reviews/:id')
   async updateReview(@Param() id: string) {
+    return;
+  }
+
+  @HttpCode(204)
+  @Post('/reviews/:id/delete')
+  async deleteReview(@Param() id: string) {
     return;
   }
 }
