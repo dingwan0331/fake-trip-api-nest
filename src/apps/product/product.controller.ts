@@ -18,4 +18,9 @@ export class ProductController {
   async getRooms(@Query() accommodationId: string) {
     return;
   }
+
+  @Get('/reviews')
+  async getReviews(@Query() accommodationId: string) {
+    return;
+  }
 }
