@@ -1,4 +1,9 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 
 @Controller('review')
-export class ReviewController {}
+export class ReviewController {
+  @Post('/reviews')
+  async createReview() {
+    return;
+  }
+}
