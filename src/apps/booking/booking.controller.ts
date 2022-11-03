@@ -1,4 +1,9 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 
 @Controller('booking')
-export class BookingController {}
+export class BookingController {
+  @Post('/reservations')
+  async createBooking() {
+    return;
+  }
+}
