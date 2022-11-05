@@ -1,4 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
+import { GetRoomsDto } from './dtos/get-rooms.dto';
+import { Room } from './entities/room.entity';
 import { ProductService } from './product.service';
 
 @Controller('product')
@@ -15,8 +17,8 @@ export class ProductController {
   }
 
   @Get('/rooms')
-  async getRooms(@Query() accommodationId: string) {
-    return;
+  async getRooms(@Query() getRoomsDto: GetRoomsDto): Promise<Room[]> {
+    return this.productService.getRooms(getRoomsDto);
   }
 
   @Get('/reviews')
