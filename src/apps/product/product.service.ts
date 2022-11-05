@@ -20,7 +20,6 @@ export class ProductService {
       .leftJoinAndSelect('accommodation.accommodationAmenity', 'amentiy')
       .leftJoin('accommodation.room', 'room')
       .orderBy({ price: 'ASC' })
-      .limit(1)
       .where(id)
       .getOne();
 
