@@ -36,6 +36,8 @@ jobs:
           echo MYSQL_HOST=127.0.0.1 >> .env
           echo MYSQL_DATABASE=fake_trip_test >> .env
           echo MYSQL_SYNC=1 >> .env
+          echo SECRET_KEY=scretkey >> .env
+          echo JWT_EXPIRE_IN=300 >> .env
           cat .env
 
       - name: Use Node.js ${{ matrix.node-version }}
