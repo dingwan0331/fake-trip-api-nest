@@ -4,16 +4,15 @@ import { AuthController } from './auth.controller';
 import { HttpModule } from '@nestjs/axios';
 import { AuthService } from './auth.serveice';
 import { JwtModule } from '@nestjs/jwt';
-import { JWT_EXPIRE_IN, SECRET_KEY } from 'src/config';
 import { User } from './entities/user.entity';
 import { UserSocialPlatform } from './entities/user-social-platform.entity';
+import { JwtConfigService } from '../../config/jwt-module.config';
 
 @Module({
   imports: [
     HttpModule.register({ timeout: 5000, maxRedirects: 5 }),
-    JwtModule.register({
-      secret: SECRET_KEY,
-      signOptions: { expiresIn: JWT_EXPIRE_IN },
+    JwtModule.registerAsync({
+      useClass: JwtConfigService,
     }),
     TypeOrmModule.forFeature([User, UserSocialPlatform]),
   ],
