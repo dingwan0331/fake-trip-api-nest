@@ -5,9 +5,10 @@ import { AuthService } from './auth.serveice';
 import { AxiosResponse } from 'axios';
 import { of } from 'rxjs';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeORMConfig } from '../../config/typeOrm.config';
 import { User } from './entities/user.entity';
 import { UserSocialPlatform } from './entities/user-social-platform.entity';
+import { TypeOrmConfigService } from '../../config/typeOrm.config';
+import { ConfigModule } from '@nestjs/config';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -16,9 +17,12 @@ describe('AuthService', () => {
   beforeEach(async () => {
     app = await Test.createTestingModule({
       imports: [
+        ConfigModule.forRoot({
+          isGlobal: true,
+        }),
         HttpModule,
         JwtModule,
-        TypeOrmModule.forRoot(typeORMConfig),
+        TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
         TypeOrmModule.forFeature([User, UserSocialPlatform]),
       ],
       providers: [AuthService],
