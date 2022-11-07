@@ -6,15 +6,22 @@ import { AxiosResponse } from 'axios';
 import { AuthModule } from '../src/apps/auth/auth.module';
 import { of } from 'rxjs';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeORMConfig } from '../src/config/typeOrm.config';
 import { JwtService } from '@nestjs/jwt';
+import { TypeOrmConfigService } from '../src/config/typeOrm.config';
+import { ConfigModule } from '@nestjs/config';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot(typeORMConfig), AuthModule],
+      imports: [
+        ConfigModule.forRoot({
+          isGlobal: true,
+        }),
+        TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
+        AuthModule,
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
