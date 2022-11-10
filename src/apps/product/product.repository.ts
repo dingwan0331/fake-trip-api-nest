@@ -13,6 +13,7 @@ export class ProductRepository {
     @InjectRepository(Room)
     private readonly roomRepository: Repository<Room>,
   ) {}
+
   async getRooms(getRoomsDto: GetRoomsDto): Promise<Room[]> {
     const { accommodationId, startDate, endDate, guests } = getRoomsDto;
     const roomsRow: Room[] = await this.roomRepository
@@ -44,5 +45,22 @@ export class ProductRepository {
       .getMany();
 
     return roomsRow;
+  }
+
+  async getAccommodation(id: number) {
+    const accommodationRow: Accommodation = await this.accommodationRepository
+      .createQueryBuilder('accommodation')
+      .select()
+      .addSelect('room.price')
+      .leftJoinAndSelect('accommodation.accommodationType', 'type')
+      .leftJoinAndSelect('accommodation.accommodationRegion', 'region')
+      .leftJoinAndSelect('accommodation.accommodationSubImage', 'subImage')
+      .leftJoinAndSelect('accommodation.accommodationAmenity', 'amentiy')
+      .leftJoin('accommodation.room', 'room')
+      .orderBy({ price: 'ASC' })
+      .where({ id })
+      .getOne();
+
+    return accommodationRow;
   }
 }
