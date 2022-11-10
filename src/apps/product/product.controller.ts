@@ -1,4 +1,10 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  SerializeOptions,
+} from '@nestjs/common';
 import { GetRoomsDto } from './dtos/get-rooms.dto';
 import { Room } from './entities/room.entity';
 import { ProductService } from './product.service';
@@ -11,13 +17,14 @@ export class ProductController {
     return;
   }
 
-  @Get('/accommodations/:id')
-  async getAccommodation(@Param() id: string) {
-    return this.productService.getAccommodation(id);
-  }
+  // @Get('/accommodations/:id')
+  // async getAccommodation(@Param() id: string) {
+  //   return this.productService.getAccommodation(id);
+  // }
 
   @Get('/rooms')
   async getRooms(@Query() getRoomsDto: GetRoomsDto): Promise<Room[]> {
+    console.log(getRoomsDto);
     return this.productService.getRooms(getRoomsDto);
   }
 

@@ -1,9 +1,29 @@
+import { Type } from 'class-transformer';
+import {
+  IsDateString,
+  IsNotEmpty,
+  IsOptional,
+  IsPositive,
+} from 'class-validator';
+
 export class GetRoomsDto {
-  'accommodation-id': string;
+  private date = new Date();
 
-  'start-date': string;
+  @Type(() => Number)
+  @IsPositive()
+  @IsNotEmpty()
+  accommodationId: number;
 
-  'end-date': string;
+  @IsOptional()
+  @IsDateString()
+  startDate: string = this.date.toISOString();
 
-  guest: string;
+  @IsOptional()
+  @IsDateString()
+  endDate: string = new Date(this.date.getDate() + 1).toISOString();
+
+  @IsOptional()
+  @IsPositive()
+  @Type(() => Number)
+  guests = 2;
 }
