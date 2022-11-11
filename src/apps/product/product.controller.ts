@@ -28,7 +28,6 @@ export class ProductController {
 
   @Get('/rooms')
   getRooms(@Query() getRoomsDto: GetRoomsDto): Promise<Room[]> {
-    console.log(getRoomsDto);
     return this.productService.getRooms(getRoomsDto);
   }
 

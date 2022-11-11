@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 
 export class GetRoomsDto {
-  private date = new Date();
+  private nowDate = new Date();
 
   @Type(() => Number)
   @IsPositive()
@@ -16,11 +16,13 @@ export class GetRoomsDto {
 
   @IsOptional()
   @IsDateString()
-  startDate: string = this.date.toISOString();
+  startDate: string = this.nowDate.toISOString();
 
   @IsOptional()
   @IsDateString()
-  endDate: string = new Date(this.date.getDate() + 1).toISOString();
+  endDate: string = new Date(
+    this.nowDate.setDate(this.nowDate.getDate() + 1),
+  ).toISOString();
 
   @IsOptional()
   @IsPositive()
