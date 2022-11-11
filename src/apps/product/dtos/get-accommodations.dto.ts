@@ -1,28 +1,13 @@
 import { Transform, Type } from 'class-transformer';
-import {
-  IsDateString,
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsPositive,
-  IsString,
-  Min,
-} from 'class-validator';
+import { IsDateString, IsInt, IsOptional, Min } from 'class-validator';
 
-export enum OrderBy {
-  '?' = '',
-  'latest' = '',
-  'max-price' = '',
-  'min-price' = '',
+export enum getAccommodationsOrderConfig {
+  'highest-price' = 'room.price DESC',
+  'lowest-price' = 'room.price ASC',
 }
 
 export class GetAccommodationsDto {
   private nowDate = new Date();
-
-  @Type(() => Number)
-  @IsPositive()
-  @IsNotEmpty()
-  accommodationId: number;
 
   @IsOptional()
   @IsDateString()
@@ -40,19 +25,17 @@ export class GetAccommodationsDto {
   @Type(() => Number)
   guests = 2;
 
-  @Transform((data) => OrderBy[data.value])
-  orderKey: string;
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  offset = 0;
 
   @IsOptional()
   @IsInt()
   @Min(0)
-  offset: number = 0;
+  limit = 20;
 
   @IsOptional()
-  @IsInt()
-  limit: number = 20;
-
-  @IsString()
-  @IsOptional()
-  filter: string = '';
+  @Transform((data) => getAccommodationsOrderConfig[data.value].split(' '))
+  order: any[] = getAccommodationsOrderConfig['highest-price'].split(' ');
 }
